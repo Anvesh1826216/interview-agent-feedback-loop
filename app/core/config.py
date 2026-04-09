@@ -8,7 +8,7 @@ class Settings:
 
     ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin@12345")
-    SESSION_SECRET = os.getenv("SESSION_SECRET", "change-me")
+    SESSION_SECRET = os.getenv("SESSION_SECRET", "supersecretkey123")
 
 
 settings = Settings()
