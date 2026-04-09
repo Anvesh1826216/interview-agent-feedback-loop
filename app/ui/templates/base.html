@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Interview Agent{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- This navbar now only contains the brand -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <span class="brand">AI Interview Intelligence</span>
+        </div>
+    </nav>
+
+    <!-- NEW: A container to hold the sidebar and main content -->
+    <div class="main-container">
+        <!-- NEW: The left sidebar for navigation -->
+        <nav class="sidebar">
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+        </nav>
+
+        <!-- The main content area -->
+        <div class="page-shell">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

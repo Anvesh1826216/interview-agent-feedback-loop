@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p>Welcome, {{ admin_user }}</p>
+
+<p>Total Conversations: {{ conversation_count }}</p>
+<p>Total Messages: {{ message_count }}</p>
+<p>Total Feedback Entries: {{ feedback_count }}</p>
+<p>Total Prompt Versions: {{ prompt_count }}</p>
+
+<style>
+  .nav-link {
+    margin-right: 1px;
+  }
+  .nav-sep {
+    margin: 0 12px;
+    color: #666;
+  }
+</style>
+
+<p>
+    <a href="/admin/conversations" class="nav-link">View Conversations (to give feedback)</a>
+    <span class="nav-sep">||</span>
+    <a href="/admin/compare" class="nav-link">Compare Conversations</a>
+    <span class="nav-sep">||</span>
+    <a href="/admin/feedback-summary" class="nav-link">Feedback Summary</a>
+    <span class="nav-sep">||</span>
+    <a href="/admin/prompt-suggestions" class="nav-link">Suggested Prompt Improvements</a>
+    <span class="nav-sep">||</span>
+    <a href="/admin/prompts" class="nav-link">Manage/Update Prompts</a>
+    <span class="nav-sep">||</span>
+    <a href="/logout" class="nav-link">Logout</a>
+</p>
+
+
+<h2>Latest Conversations</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Skill</th>
+            <th>Status</th>
+            <th>Prompt Version</th>
+            <th>Started At</th>
+            <th>Ended At</th>
+            <th>Reviewed</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in latest_conversations %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.skill }}</td>
+            <td>{{ c.status }}</td>
+            <td>{{ c.prompt_version }}</td>
+            <td>{{ c.created_at }}</td>
+            <td>{{ c.completed_at }}</td>
+            <td>{% if c.reviewed %}Yes{% else %}No{% endif %}</td>
+            <td><a href="/admin/conversations/{{ c.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

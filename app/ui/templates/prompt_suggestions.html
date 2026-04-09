@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Prompt Suggestions{% endblock %}
+
+{% block content %}
+<h1>Prompt Improvement Suggestions</h1>
+
+<p>
+    <a href="/admin">Back to Dashboard</a> |
+    <a href="/admin/feedback-summary">Feedback Summary</a> |
+    <a href="/admin/prompts">Manage Prompts</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+<h2>Feedback Summary Snapshot</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tbody>
+        <tr>
+            <th>Total Feedback Entries</th>
+            <td>{{ feedback_summary.total_feedback }}</td>
+        </tr>
+        <tr>
+            <th>Average Overall Rating</th>
+            <td>{{ feedback_summary.avg_overall }}</td>
+        </tr>
+        <tr>
+            <th>Average Fairness Rating</th>
+            <td>{{ feedback_summary.avg_fairness }}</td>
+        </tr>
+        <tr>
+            <th>Average Relevance Rating</th>
+            <td>{{ feedback_summary.avg_relevance }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>LLM Analysis Summary</h2>
+<p>{{ suggestions_result.analysis_summary }}</p>
+
+<h2>Suggested Improvements</h2>
+{% if suggestions_result.suggestions %}
+<ul>
+    {% for item in suggestions_result.suggestions %}
+    <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No suggestions available.</p>
+{% endif %}
+
+<h2>Draft Evaluation Prompt</h2>
+<div style="border:1px solid #cbd5e1; padding:12px; background:white; white-space:pre-wrap; line-height:1.5;">
+    {{ suggestions_result.draft_evaluation_prompt }}
+</div>
+
+<h2>Draft Clarification Rule</h2>
+<div style="border:1px solid #cbd5e1; padding:12px; background:white; white-space:pre-wrap; line-height:1.5;">
+    {{ suggestions_result.draft_clarification_rule }}
+</div>
+
+<p style="margin-top:20px;">
+    You can copy these drafts into <a href="/admin/prompts">Prompt Versions</a> to create a new prompt version for review and activation.
+</p>
+
+{% endblock %}

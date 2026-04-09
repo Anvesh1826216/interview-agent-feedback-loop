@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Session{% endblock %}
+
+{% block content %}
+<h1>Interview Session</h1>
+
+<p><strong>Conversation ID:</strong> {{ conversation.id }}</p>
+<p><strong>Skill:</strong> {{ conversation.skill }}</p>
+<p><strong>Status:</strong> {{ conversation.status }}</p>
+<p><strong>Prompt Version:</strong> {{ conversation.prompt_version }}</p>
+<p><strong>Progress:</strong> Question {{ current_question_number }} of {{ total_questions }}</p>
+
+<hr>
+
+<h2>Conversation</h2>
+
+<div>
+    {% for msg in messages %}
+        <p>
+            <strong>{{ msg.role|capitalize }}:</strong>
+            {{ msg.content }}
+        </p>
+    {% endfor %}
+</div>
+
+<hr>
+
+{% if not completed %}
+<form action="/ui/interviews/{{ conversation.id }}/answer" method="post">
+    <label for="answer"><strong>Your Answer</strong></label><br><br>
+    <textarea id="answer" name="answer" rows="5" cols="80" required></textarea><br><br>
+    <button type="submit">Submit Answer</button>
+</form>
+{% else %}
+<p><strong>Interview completed.</strong></p>
+<p><a href="/">Start New Interview</a></p>
+{% endif %}
+{% endblock %}
+

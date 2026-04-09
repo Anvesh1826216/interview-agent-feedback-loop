@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Conversations{% endblock %}
+
+{% block content %}
+<h1>Conversation Explorer</h1>
+
+<p>
+    <a href="/admin">Back to Dashboard</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+{% if message %}
+<p style="color: #dc2626; font-weight: bold;">
+    {{ message }}
+</p>
+{% endif %}
+
+<h2>Filters</h2>
+
+<form method="get" action="/admin/conversations" class="filter-form">
+
+    <div class="filter-full">
+        <label for="conversation_id">Conversation ID</label>
+        <input
+            type="text"
+            id="conversation_id"
+            name="conversation_id"
+            placeholder="Search by conversation ID"
+            value="{{ filters.conversation_id }}"
+        >
+    </div>
+
+    <div class="filter-grid">
+        <div class="filter-item">
+            <label for="skill">Skill</label>
+            <select id="skill" name="skill">
+                <option value="">All</option>
+                {% for s in available_skills %}
+                    <option value="{{ s }}" {% if filters.skill == s %}selected{% endif %}>
+                        {{ s }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="">All</option>
+                <option value="ongoing" {% if filters.status == "ongoing" %}selected{% endif %}>Ongoing</option>
+                <option value="completed" {% if filters.status == "completed" %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <label for="reviewed">Reviewed</label>
+            <select id="reviewed" name="reviewed">
+                <option value="">All</option>
+                <option value="yes" {% if filters.reviewed == "yes" %}selected{% endif %}>Yes</option>
+                <option value="no" {% if filters.reviewed == "no" %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <label for="prompt_version">Prompt Version</label>
+            <select id="prompt_version" name="prompt_version">
+                <option value="">All</option>
+                {% for p in available_prompt_versions %}
+                    <option value="{{ p }}" {% if filters.prompt_version == p %}selected{% endif %}>
+                        {{ p }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <label for="created_from">Created From</label>
+            <input
+                type="date"
+                id="created_from"
+                name="created_from"
+                value="{{ filters.created_from }}"
+            >
+        </div>
+
+        <div class="filter-item">
+            <label for="created_to">Created To</label>
+            <input
+                type="date"
+                id="created_to"
+                name="created_to"
+                value="{{ filters.created_to }}"
+            >
+        </div>
+    </div>
+
+    <div class="filter-actions">
+        <button type="submit" class="filter-btn">Apply Filters</button>
+        <a href="/admin/conversations" class="reset-btn">Reset</a>
+    </div>
+</form>
+
+<hr>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Conversation ID</th>
+            <th>Skill</th>
+            <th>Status</th>
+            <th>Stage</th>
+            <th>Prompt Version</th>
+            <th>Started At</th>
+            <th>Ended At</th>
+            <th>Reviewed</th>
+            <th>Review Count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in conversations %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.skill }}</td>
+            <td>{{ c.status }}</td>
+            <td>{{ c.stage }}</td>
+            <td>{{ c.prompt_version }}</td>
+            <td>{{ c.created_at }}</td>
+            <td>{{ c.completed_at }}</td>
+            <td>{% if c.reviewed %}Yes{% else %}No{% endif %}</td>
+            <td>{{ c.review_count }}</td>
+            <td><a href="/admin/conversations/{{ c.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Conversation Detail{% endblock %}
+
+{% block content %}
+<h1>Conversation Detail</h1>
+
+<p>
+    <a href="/admin/conversations">Back to Conversations</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+<h2>Metadata</h2>
+<ul>
+    <li><strong>ID:</strong> {{ conversation.id }}</li>
+    <li><strong>Skill:</strong> {{ conversation.skill }}</li>
+    <li><strong>Status:</strong> {{ conversation.status }}</li>
+    <li><strong>Stage:</strong> {{ conversation.stage }}</li>
+    <li><strong>Prompt Version:</strong> {{ conversation.prompt_version }}</li>
+    <li><strong>Created At:</strong> {{ conversation.created_at }}</li>
+    <li><strong>Completed At:</strong> {{ conversation.completed_at }}</li>
+</ul>
+
+<h2>Messages</h2>
+<ul>
+    {% for msg in messages %}
+        <li>
+            <strong>{{ msg.role }}</strong>:
+            {{ msg.content }}
+            {% if msg.question_index is not none %}
+                [question {{ msg.question_index+1 }}]
+            {% endif %}
+            ({{ msg.created_at }})
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Submit Feedback</h2>
+<form action="/admin/conversations/{{ conversation.id }}/feedback" method="post">
+    <p>
+        <label>Overall Rating (1-5)</label><br>
+        <input type="number" name="overall_rating" min="1" max="5" required>
+    </p>
+
+    <p>
+        <label>Fairness Rating (1-5)</label><br>
+        <input type="number" name="fairness_rating" min="1" max="5" required>
+    </p>
+
+    <p>
+        <label>Relevance Rating (1-5)</label><br>
+        <input type="number" name="relevance_rating" min="1" max="5" required>
+    </p>
+
+    <p>
+        <label>Flags (comma-separated)</label><br>
+        <input type="text" name="flags" placeholder="bias, weak evaluation, inappropriate question">
+    </p>
+
+    <p>
+        <label>Comments</label><br>
+        <textarea name="comments" rows="5" cols="80"></textarea>
+    </p>
+
+    <button type="submit">Submit Feedback</button>
+</form>
+
+<h2>Previous Feedback</h2>
+{% if feedback_entries %}
+    <ul>
+        {% for f in feedback_entries %}
+            <li style="margin-bottom: 18px;">
+                <strong>Evaluator:</strong> {{ f.evaluator }}<br>
+                <strong>Overall:</strong> {{ f.overall_rating }} |
+                <strong>Fairness:</strong> {{ f.fairness_rating }} |
+                <strong>Relevance:</strong> {{ f.relevance_rating }}<br>
+                <strong>Flags:</strong>
+                {% if f.flags %}
+                    {{ f.flags | join(", ") }}
+                {% else %}
+                    None
+                {% endif %}<br>
+                <strong>Comments:</strong> {{ f.comments if f.comments else "None" }}<br>
+                <strong>Created At:</strong> {{ f.created_at }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No feedback submitted yet.</p>
+{% endif %}
+
+<h2>Stored FSM State</h2>
+<pre>{{ state_json_pretty }}</pre>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Prompt Versions{% endblock %}
+
+{% block content %}
+<h1>Prompt Versions</h1>
+
+<p>
+    <a href="/admin">Back to Dashboard</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+{% if message %}
+<p style="color: green; font-weight: bold;">
+    {{ message }}
+</p>
+{% endif %}
+
+<h2>Create New Prompt Version</h2>
+<form action="/admin/prompts" method="post">
+    <p>
+        <label>Version</label><br>
+        <input type="text" name="version" required>
+    </p>
+
+    <p>
+        <label>Evaluation Prompt</label><br>
+        <textarea name="evaluation_prompt" rows="8" cols="100" required></textarea>
+    </p>
+
+    <p>
+        <label>Clarification Rule</label><br>
+        <textarea name="clarification_rule" rows="3" cols="100"></textarea>
+    </p>
+
+    <p>
+        <label>Activate Now?</label><br>
+        <select name="activate_now">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </p>
+
+    <button type="submit">Create Prompt Version</button>
+</form>
+
+<h2>Existing Prompt Versions</h2>
+
+<div style="overflow-x:auto;">
+    <table border="1" cellpadding="8" cellspacing="0"
+           style="width:100%; border-collapse:collapse; table-layout:fixed;">
+
+        <thead>
+            <tr style="background-color:#f5f5f5;">
+                <th style="width:80px;">Version</th>
+                <th style="width:60px;">Active</th>
+                <th style="width:150px;">Created At</th>
+                <th style="width:35%;">Clarification Rule</th>
+                <th style="width:45%;">Evaluation Prompt</th>
+                <th style="width:120px;">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in prompts %}
+            <tr>
+                <td style="vertical-align:top;">{{ p.version }}</td>
+
+                <td style="vertical-align:top;">
+                    {% if p.is_active %}Yes{% else %}No{% endif %}
+                </td>
+
+                <td style="vertical-align:top;">
+                    {{ p.created_at }}
+                </td>
+
+                <td style="vertical-align:top;">
+                    <div style="
+                        max-height:160px;
+                        overflow-y:auto;
+                        padding-right:5px;
+                        white-space:normal;
+                        word-break:break-word;
+                        line-height:1.5;
+                    ">
+                        {{ p.clarification_rule | trim }}
+                    </div>
+                </td>
+
+                <td style="vertical-align:top;">
+                    <div style="
+                        max-height:160px;
+                        overflow-y:auto;
+                        padding-right:5px;
+                        white-space:normal;
+                        word-break:break-word;
+                        line-height:1.5;
+                    ">
+                        {{ p.evaluation_prompt | trim }}
+                    </div>
+                </td>
+
+                <td style="vertical-align:top;">
+                    {% if not p.is_active %}
+                        <form action="/admin/prompts/{{ p.version }}/activate" method="post" style="margin-bottom:5px;">
+                            <button type="submit">Activate</button>
+                        </form>
+
+                        <form action="/admin/prompts/{{ p.version }}/delete" method="post">
+                            <button type="submit"
+                                    onclick="return confirm('Are you sure you want to delete this version?')">
+                                Delete
+                            </button>
+                        </form>
+                    {% else %}
+                        <b>Active</b>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}

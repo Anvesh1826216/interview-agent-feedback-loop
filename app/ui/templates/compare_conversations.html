@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Conversations{% endblock %}
+
+{% block content %}
+<h1>Compare Conversations (A vs B)</h1>
+
+<p>
+    <a href="/admin">Back to Dashboard</a> |
+    <a href="/admin/conversations">View Conversations</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+{% if message %}
+<p style="color: #dc2626; font-weight: bold;">{{ message }}</p>
+{% endif %}
+
+<h2>Select Conversations</h2>
+<form method="get" action="/admin/compare">
+    <p>
+        <label>Conversation A ID</label><br>
+        <input type="text" name="conversation_a" value="{{ conversation_a_input }}" style="width: 100%;">
+    </p>
+
+    <p>
+        <label>Conversation B ID</label><br>
+        <input type="text" name="conversation_b" value="{{ conversation_b_input }}" style="width: 100%;">
+    </p>
+
+    <button type="submit">Compare</button>
+</form>
+
+<h3>Recent Conversations</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Conversation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in recent_options %}
+        <tr>
+            <td>{{ item.label }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if conversation_a_data and conversation_b_data %}
+<hr>
+
+<h2>Side-by-Side Comparison</h2>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+
+    <div style="border: 1px solid #cbd5e1; background: white; padding: 16px; border-radius: 10px;">
+        <h3>Conversation A</h3>
+        <p><b>ID:</b> {{ conversation_a_data.id }}</p>
+        <p><b>Skill:</b> {{ conversation_a_data.skill }}</p>
+        <p><b>Status:</b> {{ conversation_a_data.status }}</p>
+        <p><b>Stage:</b> {{ conversation_a_data.stage }}</p>
+        <p><b>Prompt Version:</b> {{ conversation_a_data.prompt_version }}</p>
+        <p><b>Started At:</b> {{ conversation_a_data.created_at }}</p>
+        <p><b>Ended At:</b> {{ conversation_a_data.completed_at }}</p>
+
+        <h4>Messages</h4>
+        <div style="max-height: 420px; overflow-y: auto; border: 1px solid #e5e7eb; padding: 10px;">
+            {% for m in conversation_a_data.messages %}
+            <p>
+                <b>{{ m.role|capitalize }}:</b> {{ m.content }}
+                {% if m.question_index is not none %}
+                    <span style="color:#64748b;">[question {{ m.question_index }}]</span>
+                {% endif %}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="border: 1px solid #cbd5e1; background: white; padding: 16px; border-radius: 10px;">
+        <h3>Conversation B</h3>
+        <p><b>ID:</b> {{ conversation_b_data.id }}</p>
+        <p><b>Skill:</b> {{ conversation_b_data.skill }}</p>
+        <p><b>Status:</b> {{ conversation_b_data.status }}</p>
+        <p><b>Stage:</b> {{ conversation_b_data.stage }}</p>
+        <p><b>Prompt Version:</b> {{ conversation_b_data.prompt_version }}</p>
+        <p><b>Started At:</b> {{ conversation_b_data.created_at }}</p>
+        <p><b>Ended At:</b> {{ conversation_b_data.completed_at }}</p>
+
+        <h4>Messages</h4>
+        <div style="max-height: 420px; overflow-y: auto; border: 1px solid #e5e7eb; padding: 10px;">
+            {% for m in conversation_b_data.messages %}
+            <p>
+                <b>{{ m.role|capitalize }}:</b> {{ m.content }}
+                {% if m.question_index is not none %}
+                    <span style="color:#64748b;">[question {{ m.question_index }}]</span>
+                {% endif %}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h2>Submit Comparison Preference</h2>
+
+<p>
+    <b>Prompt Version A:</b> {{ conversation_a_data.prompt_version }}<br>
+    <b>Prompt Version B:</b> {{ conversation_b_data.prompt_version }}
+</p>
+
+<form method="post" action="/admin/compare/preference">
+    <input type="hidden" name="conversation_a_id" value="{{ conversation_a_data.id }}">
+    <input type="hidden" name="conversation_b_id" value="{{ conversation_b_data.id }}">
+
+    <p>
+        <label><input type="radio" name="preference" value="A" required> Conversation A is better</label><br>
+        <label><input type="radio" name="preference" value="B"> Conversation B is better</label><br>
+        <label><input type="radio" name="preference" value="Tie"> Tie / No clear preference</label>
+    </p>
+
+    <p>
+        <label>Notes</label><br>
+        <textarea name="notes" rows="4" style="width:100%;"></textarea>
+    </p>
+
+    <button type="submit">Save Preference</button>
+</form>
+{% endif %}
+
+<hr>
+
+<h2>Recent Comparison History</h2>
+{% if comparison_history %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Conversation A</th>
+            <th>Prompt A</th>
+            <th>Conversation B</th>
+            <th>Prompt B</th>
+            <th>Evaluator</th>
+            <th>Preference</th>
+            <th>Notes</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in comparison_history %}
+        <tr>
+            <td>{{ row.conversation_a_id }}</td>
+            <td>{{ row.prompt_version_a }}</td>
+            <td>{{ row.conversation_b_id }}</td>
+            <td>{{ row.prompt_version_b }}</td>
+            <td>{{ row.evaluator }}</td>
+            <td>{{ row.preference }}</td>
+            <td>{{ row.notes }}</td>
+            <td>{{ row.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No comparison preferences submitted yet.</p>
+{% endif %}
+
+<hr>
+
+<h2>Prompt Version Preference Summary</h2>
+{% if version_comparison_summary %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Version Pair</th>
+            <th>Wins</th>
+            <th>Ties</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in version_comparison_summary %}
+        <tr>
+            <td>{{ row.pair }}</td>
+            <td>{{ row.win_summary }}</td>
+            <td>{{ row.ties }}</td>
+            <td>{{ row.total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No version comparison data yet.</p>
+{% endif %}
+
+{% endblock %}
