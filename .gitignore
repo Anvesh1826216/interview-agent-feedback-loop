@@ -8,9 +8,6 @@ venv/
 .venv/
 env/
 
-# Environment variables
-.env
-
 # IDE
 .vscode/
 .idea/
@@ -21,10 +18,6 @@ Thumbs.db
 
 # Logs
 *.log
-
-# SQLite / local DB
-*.db
-*.sqlite3
 
 # Pytest / coverage
 .pytest_cache/
