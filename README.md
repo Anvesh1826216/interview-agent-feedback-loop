@@ -34,7 +34,7 @@ This submission **fully implements all required, expected, and multiple bonus co
 - Error handling & resilience: (invalid input, missing responses, LLM failures) ✔
 - Basic observability: (health endpoint, structured logs)  ✔
 
-## ⭐ Bonus
+## ⭐ Bonus (Additional Enhancements)
 
 - A/B comparison of conversations (side-by-side evaluation) ✔
 - Feedback aggregation ✔
@@ -43,8 +43,6 @@ This submission **fully implements all required, expected, and multiple bonus co
 - Mock LLM mode (no API key required — reviewer friendly) ✔
 - Real LLM mode (OpenAI integration) ✔
 - Docker Hub deployment (ready-to-run image) ✔
-
-
 
 
 ## ✨ Overview
