@@ -260,8 +260,8 @@ Evaluators can:
 ### 🖥️ Option 1: Run Locally
 
 ```bash
-git clone <https://github.com/Anvesh1826216/interview-agent-feedback-loop.git>
-cd <interview-agent-feedback-loop>
+git clone https://github.com/Anvesh1826216/interview-agent-feedback-loop.git
+cd interview-agent-feedback-loop
 python -m venv .venv
 .venv\Scripts\activate   # Windows
 pip install -r requirements.txt
@@ -272,6 +272,8 @@ uvicorn app.main:app --reload
 ### 🐳 Option 2: Run with Docker (Recommended)
 
 ```bash
+git clone https://github.com/Anvesh1826216/interview-agent-feedback-loop.git
+cd interview-agent-feedback-loop
 docker compose up --build
 ```
 
