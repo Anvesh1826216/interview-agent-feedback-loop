@@ -110,6 +110,7 @@ To keep the system focused, testable, and aligned with the assignment timeline, 
 - Each interview covers **exactly one skill**
 - Each skill contains **3 predefined questions**.
 - The question bank is **static and controlled** (not dynamically generated)
+  
 **Reasoning:**  
 This ensures consistency across interviews and enables reliable comparison between prompt versions.
 
@@ -119,6 +120,7 @@ This ensures consistency across interviews and enables reliable comparison betwe
 
 - The agent allows a **limited number of clarification attempts per question**
 - If the candidate repeatedly provides weak answers, the system moves forward
+  
 **Reasoning:**  
 Prevents infinite loops and maintains a realistic interview flow.
 
@@ -127,6 +129,7 @@ Prevents infinite loops and maintains a realistic interview flow.
 ### 🧑‍⚖️ Evaluator Scope
 - Assumes a **small number of evaluators (admins)**
 - No complex authentication/authorization system (e.g., roles, permissions)
+
 **Reasoning:**  
 Focus is on feedback workflow, not user management systems.
 
