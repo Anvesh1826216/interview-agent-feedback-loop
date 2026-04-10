@@ -172,11 +172,15 @@ Simple, portable, and requires zero setup for reviewers.
 
 ---
 
-### 📊 Observability Scope
+### 📊 Observability
 
-- Includes:
-  - `/health` endpoint  
-  - structured logs  
+- /health endpoint
+
+👉 [http://localhost:8000/health](http://localhost:8000/health)
+
+- structured logs
+  
+👉 visible in terminal whether MockLLM or Real LLM system activated
 
 **Reasoning:**  
 Provides basic production visibility without adding heavy monitoring systems.
@@ -423,15 +427,6 @@ Handles:
 - LLM failures
 - Prompt issues
 
-### 📊 Observability
-
-- /health endpoint
-
-👉 [http://localhost:8000/health](http://localhost:8000/health)
-
-- structured logs
-  
-👉 visible in terminal whether MockLLM or Real LLM system activated
 
 ### 📌 Assumptions
 
